@@ -1,59 +1,64 @@
 [app]
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التطبيق الأساسية ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-title = HTTP Custom Pro            # اسم التطبيق الظاهر
-package.name = httpcustom_pro      # اسم الحزمة (فريد)
-package.domain = com.aymankhifo   # نطاق الحزمة
-version = 1.0.0                    # إصدار التطبيق
-source.dir = .                     # مجلد الكود المصدري
+# عنوان التطبيق
+title = NewKivyApp1
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات البناء ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-requirements =                     # المتطلبات الأساسية
-    python3==3.11.6,
-    kivy==2.3.0,
-    openssl==23.2.0,
-    dnspython==2.4.2,
-    pyopenssl==23.3.0,
-    requests==2.31.0
+# اسم الحزمة (يجب أن يكون فريدًا)
+package.name = com.aymankhifou.newkivyapp1
 
-android.accept_license = True      # قبول التراخيص تلقائيًا
-android.arch = armeabi-v7a         # بنية المعالج
+# اسم المجلد الرئيسي للتطبيق (حيث يوجد main.py)
+source.dir = .
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات Android المتقدمة ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-android.sdk = 34                   # إصدار Android SDK
-android.ndk = 25c                  # إصدار Android NDK
-android.build_tools = 34.0.0       # إصدار أدوات البناء
-android.api = 33                   # إصدار API المستهدف
+# ملف التشغيل الرئيسي
+source.include_exts = py,png,jpg,kv,ttf
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ الأذونات والصلاحيات ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-android.permissions =              # صلاحيات النظام
+# إصدار التطبيق
+version = 1.0
+
+# القواعد المطلوبة (Kivy هنا)
+requirements = 
+    python3,
+    kivy==2.1.0,
+    android,
+    openssl,
+    requests
+
+# إصدار Android SDK المستهدف
+android.api = 34
+android.minapi = 21
+android.sdk = 34
+android.ndk = 25b
+android.gradle_download = True
+
+# إعدادات البناء
+android.accept_sdk_license = True  # ⭐ قبول التراخيص تلقائيًا
+android.release_artifact = .apk
+p4a.branch = develop
+
+# إعدادات الأذونات (عدلها حسب حاجة التطبيق)
+android.permissions = 
     INTERNET,
-    ACCESS_NETWORK_STATE,
-    FOREGROUND_SERVICE
+    ACCESS_NETWORK_STATE
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ الأصول والموارد ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-icon.filename = assets/icon.png            # أيقونة التطبيق (512x512 بكسل)
-presplash.filename = assets/splash.gif     # شاشة التحميل (800x600 بكسل)
-orientation = portrait                     # اتجاه الشاشة
+# إعدادات OpenSSL (مهمة للاتصال الآمن)
+android.openssl_static = True
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التوقيع الرقمي ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-android.release_keystore = user.keystore   # ملف التوقيع
-android.release_storepassword = 123456     # كلمة مرور المتجر
-android.release_keyalias = httpcustom      # اسم المفتاح
-android.release_keypassword = 123456       # كلمة مرور المفتاح
+# إعدادات الأيقونة والشاشة التمهيدية
+icon.filename = %(source.dir)s/data/images/icon.png
+presplash.filename = %(source.dir)s/data/images/presplash.png
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التخصيص ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-fullscreen = 0                       # عدم استخدام الشاشة الكاملة
-log_level = 2                        # مستوى تفصيل السجلات
-android.wakelock = False             # منع إبقاء الشاشة مضاءة
+# إعدادات الأداء
+fullscreen = 0
+orientation = portrait
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ استثناءات الملفات ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-source.exclude_exts =                # استبعاد امتدادات الملفات
-    .pyc,
-    .pyo,
-    .pyd,
-    .git,
-    .gitignore
+# إعدادات التوقيع (اتركها فارغة للبناء للتجربة)
+# (للبناء النهائي، أضف مفاتيح التوقيع هنا)
+# android.keystore = 
+# android.keystore_passwd = 
+# android.keyalias = 
+# android.keyalias_passwd = 
 
 [buildozer]
-log_level = 2                        # مستوى تفصيل سجلات البناء
+# إصدار Buildozer
+log_level = 2
+warn_on_root = 1
