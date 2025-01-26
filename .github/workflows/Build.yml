@@ -33,7 +33,7 @@ jobs:
           pkg-config \
           zlib1g-dev \
           libncurses5-dev \
-          libtinfo5  # التعديل هنا
+          libtinfo5  # التصحيح النهائي هنا
 
     - name: Install Buildozer and Requirements
       run: |
