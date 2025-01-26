@@ -1,42 +1,65 @@
-name: CI
+name: Android CI/CD Pipeline
+
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_DIR: .buildozer
+  SPEC_FILE: buildozer.spec
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # used to cache dependencies with a timeout
-      - name: Get Date
-        id: get-date
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install System Dependencies
         run: |
-          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        shell: bash
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            zip \
+            python3-pip \
+            openjdk-17-jdk \
+            zlib1g-dev
 
-      - name: Cache Buildozer global directory
-        uses: actions/cache@v2
-        with:
-          path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
+      - name: Install Buildozer & Requirements
+        run: |
+          pip install --user buildozer==1.5.0
+          pip install --user Cython==0.29.36
 
-      - uses: actions/cache@v2
+      - name: Cache Buildozer Dependencies
+        uses: actions/cache@v3
         with:
-          path: .buildozer
-          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
+          path: |
+            ~/.buildozer
+            ~/.gradle
+            ${{ env.BUILD_DIR }}
+          key: ${{ runner.os }}-build-${{ hashFiles(env.SPEC_FILE) }}
 
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          command: buildozer android debug
-          buildozer_version: master
+      - name: Build Android APK
+        run: |
+          export PATH=$PATH:$HOME/.local/bin
+          buildozer -v android debug
+          cp bin/*.apk app-debug.apk
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+          name: http-custom-pro-apk
+          path: |
+            app-debug.apk
+            ${{ env.SPEC_FILE }}
+          retention-days: 7
