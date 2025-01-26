@@ -1,78 +1,59 @@
 [app]
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التطبيق الأساسية ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+title = HTTP Custom Pro            # اسم التطبيق الظاهر
+package.name = httpcustom_pro      # اسم الحزمة (فريد)
+package.domain = com.aymankhifo   # نطاق الحزمة
+version = 1.0.0                    # إصدار التطبيق
+source.dir = .                     # مجلد الكود المصدري
 
-# اسم التطبيق الظاهر للمستخدمين
-title = HTTP Custom Pro
-
-# اسم الحزمة (يجب أن يكون فريدًا، استخدم نظام reverse-domain)
-package.name = httpcustom.pro
-
-# نطاق الحزمة (للتطبيقات على Android/iOS)
-package.domain = com.httpcustom.pro
-
-# إصدار التطبيق (يُفضَّل استخدام semantic versioning)
-version = 1.0.0
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات الملفات والمجلدات ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# المجلد الرئيسي للكود المصدري (حيث يوجد main.py)
-source.dir = .
-
-# أنواع الملفات المضمنة في البناء (الامتدادات المسموحة)
-source.include_exts = py,png,jpg,kv,ttf,gif,spec
-
-# مجلدات تستبعد من البناء (لتحسين الحجم)
-source.exclude_dirs = tests, bin, venv, __pycache__, logs
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات واجهة المستخدم ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# اتجاه الشاشة (portrait/landscape/all)
-orientation = portrait
-
-# الأيقونة (يجب أن تكون موجودة في المسار المحدد)
-icon.filename = assets/logo.png
-
-# شاشة التحميل الأولية (Presplash)
-presplash.filename = assets/loading.gif
-presplash.color = #1A1A1A  # لون خلفية Presplash
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ المتطلبات التقنية ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-# إصدار بايثون والمكتبات الأساسية
-requirements = 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات البناء ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+requirements =                     # المتطلبات الأساسية
     python3==3.11.6,
     kivy==2.3.0,
-    dnspython==2.4.2,
     openssl==23.2.0,
-    pyopenssl==23.3.0
+    dnspython==2.4.2,
+    pyopenssl==23.3.0,
+    requests==2.31.0
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات Android التخصصية ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+android.accept_license = True      # قبول التراخيص تلقائيًا
+android.arch = armeabi-v7a         # بنية المعالج
 
-# صلاحيات النظام المطلوبة
-android.permissions = 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات Android المتقدمة ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+android.sdk = 34                   # إصدار Android SDK
+android.ndk = 25c                  # إصدار Android NDK
+android.build_tools = 34.0.0       # إصدار أدوات البناء
+android.api = 33                   # إصدار API المستهدف
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ الأذونات والصلاحيات ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+android.permissions =              # صلاحيات النظام
     INTERNET,
     ACCESS_NETWORK_STATE,
     FOREGROUND_SERVICE
 
-# إصدارات أدوات التطوير (SDK/NDK)
-android.sdk = 34
-android.ndk = 25c
-android.api = 33
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ الأصول والموارد ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+icon.filename = assets/icon.png            # أيقونة التطبيق (512x512 بكسل)
+presplash.filename = assets/splash.gif     # شاشة التحميل (800x600 بكسل)
+orientation = portrait                     # اتجاه الشاشة
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ التوقيع الرقمي (لتوزيع التطبيق) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التوقيع الرقمي ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+android.release_keystore = user.keystore   # ملف التوقيع
+android.release_storepassword = 123456     # كلمة مرور المتجر
+android.release_keyalias = httpcustom      # اسم المفتاح
+android.release_keypassword = 123456       # كلمة مرور المفتاح
 
-# معلومات التوقيع (غيّرها عند النشر الرسمي)
-android.release_keystore = user.keystore
-android.release_storepassword = 123456
-android.release_keyalias = httpcustom
-android.release_keypassword = 123456
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات التخصيص ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+fullscreen = 0                       # عدم استخدام الشاشة الكاملة
+log_level = 2                        # مستوى تفصيل السجلات
+android.wakelock = False             # منع إبقاء الشاشة مضاءة
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ إعدادات عامة لـ Buildozer ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ استثناءات الملفات ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+source.exclude_exts =                # استبعاد امتدادات الملفات
+    .pyc,
+    .pyo,
+    .pyd,
+    .git,
+    .gitignore
+
 [buildozer]
-
-# مستوى التفاصيل في السجلات (0 = صامت، 2 = مفصل)
-log_level = 2
-
-# تحذير عند التشغيل كـ root (للسلامة)
-warn_on_root = 1
+log_level = 2                        # مستوى تفصيل سجلات البناء
