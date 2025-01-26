@@ -1,52 +1,66 @@
-name: Android CI/CD Pipeline
+name: Build Android APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-android:
-    name: Build Android APK
-    runs-on: ubuntu-22.04
-    timeout-minutes: 30
+  build-android-apk:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git \
-            zip \
-            openjdk-17-jdk \
-            zlib1g-dev
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y \
+          git \
+          zip \
+          unzip \
+          openjdk-17-jdk \
+          python3-pip \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          libtinfo5
 
-      - name: Install Buildozer & Requirements
-        run: |
-          pip install --user buildozer==1.5.0
-          pip install --user Cython==0.29.36
+    - name: Install Buildozer and Requirements
+      run: |
+        python -m pip install --upgrade pip wheel
+        pip install buildozer cython==0.29.33
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Accept Android Licenses
-        run: |
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          yes | sdkmanager --licenses
+    - name: Set up Android SDK
+      run: |
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+          "platform-tools" \
+          "platforms;android-34" \
+          "build-tools;34.0.0" \
+          "cmdline-tools;latest"
+        echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
 
-      - name: Build Android APK
-        run: |
-          export PATH=$PATH:$HOME/.local/bin
-          buildozer -v android debug
+    - name: Build Android APK
+      run: |
+        buildozer init
+        buildozer -v android debug
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: http-custom-pro-apk
-          path: bin/*.apk
-          retention-days: 7
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apk
+        path: bin/*.apk
+        retention-days: 3
